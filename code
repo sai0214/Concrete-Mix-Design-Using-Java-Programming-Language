@@ -1,0 +1,907 @@
+package JAVA;
+import java.util.Scanner;
+public class CONCRETE_MIX_DESIGN {
+    /*  WATER- CEMENT RATIO FROM IS-10262 2019  */
+	public static double round_off(double d)
+    {
+        d=Math.round(d*10000);
+        return d/10000;
+    }
+	public static double round_off2(double d)
+    {
+        d=Math.round(d*100);
+        return d/100;
+    }
+	public static double Get_watercement_ratio_from_IS10262(double y) {
+		
+		
+		if(y==48.25)
+			return 0.36;
+		else if(y>=70.00)
+			return 0.29;
+		
+        double a=0.4751;
+        double b=-10.201;
+        double c=69.405-y;
+        
+        double d = b*b- 4*a*c;  
+        double sqrtval = Math.sqrt(Math.abs(d));
+        double r1=0;
+        double r2=0;
+        if(d>0)   
+        {  
+            r1=(double)(-b + sqrtval) / (2 * a);
+            r2=(double)(-b - sqrtval) / (2 * a);  
+            
+        }  
+        else if (d == 0)   
+        {
+            r1=-(double)b / (2 * a); 
+            r2=-(double)b / (2 * a);  
+            
+        }  
+        
+        double x=0;
+        if(r1>=1 && r1<=9)
+        {
+            x=r1;
+        }
+        else if(r2>=1 && r2<=9)
+        {
+            x=r2;
+        }
+        else
+        {
+            x=0;
+        }
+        return (x+4)/20;
+    }
+	
+	
+	public static double tARGETmEANsTRENGTH(double f_ck)
+	{
+		double X=0;
+		double S=0;
+		if(f_ck <=15)
+		{
+			X=5;
+			S=3.5;
+		}
+		else if(f_ck <=25)
+		{
+			X=5.5;
+			S=4;
+		}
+		else if(f_ck <=60)
+		{
+			X=6.5;
+			S=5;
+		}
+		else if(f_ck >60)
+		{
+			X=8;
+			S=6;
+		}
+		double fck_1=f_ck+1.65*S;
+		double fck_2=f_ck+X;
+		return Math.max(fck_1,fck_2);
+	}
+	
+	
+	
+	
+	
+	public static void main(String[] args) 
+	
+	{
+	
+		Scanner sc=new Scanner(System.in);
+	
+		/*  TAKING ALL THE INPUT DATA REQUIRED*/
+		
+		//TAKING FCK FROM IS 10262 2019
+		System.out.print("Enter the Grade Designition (eg: M 40): ");
+		double f_ck=sc.nextDouble();
+		double hson=f_ck;
+		if(hson<=65)
+			System.out.println("Enter the maximum nominal size of aggregate in mm (10, 20, 30):");
+		else
+			System.out.println("Enter the maximum nominal size of aggregate in mm (10, 12.5, 20):");
+		
+		double Aggregates_size=sc.nextDouble();
+		
+		
+		
+		if(hson <=65)
+		{
+			System.out.print("Select the zone of fine aggregates:");
+			System.out.print("\r\n"
+					+ "        [1] Zone 1\r\n"
+					+ "        [2] Zone 2\r\n"
+					+ "        [3] Zone 3\r\n"
+					+ "        [4] Zone 4\n");
+		}
+		else
+		{
+			System.out.print("Select the zone of fine aggregates:");
+			System.out.println("\r\n"
+					+ "        [1] Zone 1\r\n"
+					+ "        [2] Zone 2\r\n"
+					+ "        [3] Zone 3\n");
+		}
+		
+		System.out.print("ZONE-");
+		
+		int zone_index=sc.nextInt();
+		
+		
+		//EXPOSURE CONDITION 
+		
+		System.out.println("Enter the exposure condition (eg: Moderate): ");
+		System.out.println("        [1] MILD \r\n"
+				+ "        [2] MODERATE\r\n"
+				+ "        [3] SEVERE\r\n"
+				+ "        [4] VERY SEVERE\r\n"
+				+ "        [5] EXTREME");
+		//int exposure_type=sc.nextInt();
+		
+		
+		
+		String Exposur_Required=sc.next();
+		
+	
+		
+		
+		// TAKING CONCRETE TYPE 
+		System.out.println("Enter Type Of Concrete : ");
+		System.out.println("        [1] REINFORCED CONCRETE\r\n"
+				+ "        [2] PLAIN CONCRETE");
+		int concrete_type=sc.nextInt();
+		String Concrete_type="";
+		if(concrete_type==1)
+			Concrete_type="RC";
+		else if(concrete_type==2)
+			Concrete_type="PC";
+		
+		
+		
+		
+		/* SLUMP */
+		System.out.print("Enter the workability(slump) of cement in mm: ");
+		int Slump = sc.nextInt();
+		
+		System.out.println();
+		
+		/* TAKING SPECIFIC GRAVITY VALUES FOR REQUIRED MATERIALS */
+		
+		
+		System.out.print("Enter specific gravity of CEMENT: ");
+		double sg_c=sc.nextDouble();
+		
+		System.out.println();
+		
+		System.out.print("Enter Specific Gravity of WATER : ");
+		double sg_w=sc.nextDouble();
+		
+		System.out.println();
+		
+		System.out.print("Enter Specific Gravity of COURSE AGGREGATES : ");
+		double sg_CAgg=sc.nextDouble();
+		
+		System.out.println();
+		
+		System.out.print("Enter Specific Gravity of FINE AGGREGATES : ");
+		double sg_FAgg=sc.nextDouble();
+		
+		System.out.println();
+		
+		System.out.print("Enter Specific Gravity of ADDMIXTURES : ");
+		double sg_Add=sc.nextDouble();
+		
+		System.out.println();
+		
+		
+		
+		
+		/*  PRESENCE OF PLASTISIZERS AND SUPER_PLASTISIZERS IS CHECKED */
+		
+		
+		System.out.println("Select the type of chemical admixture\n");
+		
+		System.out.println( "        [1] Superplasticizer" );
+		System.out.println( "        [2]  Plasticizer ");
+		System.out.print("Choice (eg: 1): ");
+		
+		int requird_admxtures = sc.nextInt();
+		double Superplastisizer_percentage=0;
+		if(requird_admxtures==1)
+		{
+			Superplastisizer_percentage=30*0.01;   
+		}
+		else if(requird_admxtures==2)
+		{
+			Superplastisizer_percentage=23*0.01;
+		}
+		
+        System.out.println();
+		
+		
+		
+		
+		/*   ADMIXTURES IS REQUIRED OR NOT   */
+		
+		System.out.print("Enter Admixtures percentage : ");
+		double Admixtures_percentage=sc.nextDouble()*0.01; // ENTER AS % 
+		
+		System.out.println();
+		
+		
+		
+		
+		/*  CHECKING FOR FLYASH PRESENCE  */
+		
+		System.out.print("Enter 1 if FLY ASH is  required else Enter 0 ");
+		int Fly_Ash = sc.nextInt();
+		double Flyash_percentage=0;
+		double Fly_Ash_Con=0;
+		double sg_flyash=0;
+		if(Fly_Ash==1)
+		{
+			System.out.println("Enter % of Fly Ash Should be considered : ");
+			Flyash_percentage=sc.nextDouble()*0.01;
+			System.out.println("Enter Specific Gravity of FLY ASH : ");
+			sg_flyash=sc.nextDouble();
+		}
+		System.out.println();
+		
+		
+		/*  CHECKING FOR GGBS PRESENCE  */
+		
+		System.out.print("Enter 1 if GGBS is  required else Enter 0 ");
+		int GGBS = sc.nextInt();
+		double GGBS_percentage=0;
+		double GGBS_Content=0;
+		double sg_GGBS=0;
+		if(GGBS==1)
+		{
+			System.out.println("Enter % of GGBS Should be considered : ");
+			GGBS_percentage=sc.nextDouble()*0.01;
+			System.out.println("Enter Specific Gravity of GGBS : ");
+			sg_GGBS=sc.nextDouble();
+		}
+		System.out.println();
+		
+		
+		
+		/*  CHECKING FOR SILICA FUMES PRESENCE  */ 
+		
+		System.out.print("Enter 1 if Silica Fumes is  required else Enter 0 ");
+		int Silica_Fumes = sc.nextInt();
+		double silicafumes_percentage=0;
+		double Silicafumes_Content=0;
+		double sg_Silicafumes=0;
+		if(Silica_Fumes==1)
+		{
+			System.out.println("Enter % of Silica Fumes Should be considered : ");
+			silicafumes_percentage=sc.nextDouble()*0.01;
+			System.out.println("Enter Specific Gravity of Silica Fumes : ");
+			sg_Silicafumes=sc.nextDouble();
+		}
+		System.out.println("\n");
+		
+		
+		
+		
+		/* CHECKING FOR PUMPING OF AGGREGATE IF YES */
+		
+		System.out.println("Will you pump the concrete? (yes or no):");
+		String Pumpable_Concrete = sc.next();
+		
+		System.out.println();
+		
+		
+		
+		/* BASED ON AGGREGAT SIZES VOLUME OF COARSE AGGREGATES IS FOUND */
+		
+		// THIS IS FOR NORMAL CONCRETE 
+		// EXECUTE BASED ON THE F_CK VALUE 
+		double[] Agg_size=new double[3];
+		double[][] Volume_CA = new double[3][4];
+		if(hson<=65)
+		{
+			Agg_size[0]=10;
+			Agg_size[1]=20;
+			Agg_size[2]=40;
+			
+			Volume_CA[0][0]=0.48;
+			Volume_CA[0][1]=0.5;
+			Volume_CA[0][2]=0.52;
+			Volume_CA[0][3]=0.54;
+			
+			Volume_CA[1][0]=0.6;
+			Volume_CA[1][1]=0.62;
+			Volume_CA[1][2]=0.64;
+			Volume_CA[1][3]=0.66;
+			
+			Volume_CA[2][0]=0.69;
+			Volume_CA[2][1]=0.71;
+			Volume_CA[2][2]=0.72;
+			Volume_CA[2][3]=0.73;
+			
+		}
+		
+		// THIS IS FOR HIGH STRENGTH CONCRETE 
+		// EXECUTE BASED ON THE F_CK VALUE 
+		else
+		{
+			Agg_size[0]=10;
+			Agg_size[1]=12.5;
+			Agg_size[2]=20;
+			
+			Volume_CA[0][0]=0.52;
+			Volume_CA[0][1]=0.54;
+			Volume_CA[0][2]=0.56;
+			Volume_CA[0][3]=0;
+			
+			Volume_CA[1][0]=0.54;
+			Volume_CA[1][1]=0.56;
+			Volume_CA[1][2]=0.58;
+			Volume_CA[1][3]=0;
+			
+			Volume_CA[2][0]=0.64;
+			Volume_CA[2][1]=0.66;
+			Volume_CA[2][2]=0.68;
+			Volume_CA[2][3]=0;
+			
+		}
+		
+		
+		/* TAKING EXPOSURE CONDITIONS OF AGGREGATES */
+		
+		
+		
+		String[] Exposure={"Mild" , "Moderate","Severe","Very_Severe" , "Extreme"};
+		
+		
+		
+		
+		/*   CALCULATING TARGET MEAN STRENGTH FOR MIX PROPORTIONING  */
+		
+		
+		f_ck=tARGETmEANsTRENGTH(f_ck);
+		
+		
+		
+		// target mean strength is done correctly 
+		
+		/* CALCULATING AIR CONTENT */
+		
+		double aircontent =0;
+		double[] Air=new double[3];
+		
+		if(hson<=65)
+		{
+			Air[0]=1.5;
+			Air[1]=1.0;
+			Air[2]=0.8;
+		}
+		else
+		{
+			Air[0]=1.0;
+			Air[1]=0.8;
+			Air[2]=0.5;
+		}
+		
+		int Ag_index=0;
+		
+		for(int i=0;i<3;i++)
+		{
+			if(Agg_size[i]==Aggregates_size)
+			{
+				aircontent=Air[i];        // AIR CONTENT IS FOUNDED 
+				Ag_index=i;               // USING THIS AG INDEX proportion OF CA & FA IS FOUND 
+				break;
+			}
+		}
+		double PROPORTION_of_Ag=Volume_CA[Ag_index][zone_index-1];
+		
+		//System.out.println("Aircontent %  is :  " +  aircontent);
+		//System.out.println("Proportion of CA and FA is :  " + PROPORTION_of_Ag);
+		
+		
+		
+		/* SELCTION OF WATER-CEMENT RATION */
+		
+		/* FROM IS 456-2000 GUIDELINES */
+		
+		double wc_ratio1=0;
+		
+		
+		// DATA TAKEN FROM IS 456-2000 TABLE NO: 
+		double[] PCMaxwcratio= {0.6,0.6,0.5,0.45,0.4};
+		double[] RCMaxwcratio= {0.55,0.5,0.45,0.45,0.4};
+
+		int[] PCMax_cement_Content= {220,240,250,260,280};
+		int[] RCMax_cement_Content= {300,300,320,340,360};
+		
+		int min_cement_content=0;
+		
+		for(int i=0;i<5;i++)
+		{
+			if(Exposure[i].equals(Exposur_Required))
+			{
+				
+				if(Concrete_type.equals("PC"))
+				{
+					wc_ratio1=PCMaxwcratio[i]-0.1;
+					min_cement_content=PCMax_cement_Content[i];
+				}
+				else if(Concrete_type.equals("RC"))
+				{
+					wc_ratio1=RCMaxwcratio[i]-0.05;
+					min_cement_content=RCMax_cement_Content[i];
+				}
+			}
+		}
+		
+		
+		
+		/* SELECTION OF WATER_CEMENT RATIO FROM SI 10262 2019 */
+		
+		
+		double wc_ratio2=Get_watercement_ratio_from_IS10262(f_ck);
+		//System.out.println(wc_ratio2+"     y  y   y y");
+		
+		double wc_ratio=Math.min(wc_ratio2,wc_ratio1);
+
+		
+		
+		
+		
+		/* SELECTION OF WATER CONTENT */
+		
+		double[] water=new double[3];
+		
+		if(hson<=40)
+		{
+			water[0]=208;
+			water[1]=186;
+			water[2]=165;
+		}
+		else
+		{
+			water[0]=200;
+			water[1]=195;
+			water[2]=186;
+		}
+		double water_content=0;
+		
+		//  BASED ON NOMINAL SIZE OF AGGREGATE WATER CONTENT WILL BE CHANGED 
+		// THE WATER CONTENT VALUE TAKEN FROM TABLE IS FRO SLUMP 50mm
+		
+		
+		for(int i=0;i<3;i++)
+		{
+			if(Agg_size[i]==Aggregates_size)
+			{
+				water_content=water[i];
+			}
+		}
+		//System.out.println("water- raio is  : " + wc_ratio);
+		
+		// IF SLUMP > 50 , FOR EVERY INCERESE OF 25MM SLUMP 3% OF WATER CONTENT IS INCRESED 
+		
+		if(Slump>50)
+		{
+			double x=((Slump-50)*3)/25;
+			{
+				water_content += ((x*water_content)/100);
+			}
+		}
+		
+		water_content=round_off(water_content);
+		
+		System.out.println("water content is :  "+water_content); // later round of it 
+		
+		
+		
+		// IF SUPER PLASTISIZERS ARE USED WATER CONTENT IS REDUCED
+		
+		water_content-=Superplastisizer_percentage*water_content;
+		
+		water_content=Math.round(water_content);
+		
+		System.out.println("water content is :  "+water_content); // later round of it 
+		
+		System.out.println("wc ratio : "+wc_ratio);
+		
+		
+		/*  CALCULATION OF CEMENT CONTENT */
+		
+		
+		double cement_content2=Math.round(water_content/wc_ratio); 
+		
+		double Cement_Content=Math.max(min_cement_content,cement_content2);
+		
+		System.out.println("Cement Content : "+Cement_Content);
+		
+		
+		
+		wc_ratio=water_content/Cement_Content;
+		
+		
+		
+		// write code for fly ash , ggbs , silica fumes
+		
+		double mass_chemical_Admixtures=0;
+		if(Fly_Ash==1 || GGBS==1 || Silica_Fumes==1)
+		{
+			
+			if(Fly_Ash==1) 							// if fly ash present its quantity is found 
+			{
+				
+				Cement_Content*=1.1;
+				Cement_Content=Math.round(Cement_Content);
+				
+				System.out.println(Cement_Content);
+				
+				
+				
+				wc_ratio=(water_content/Cement_Content);
+				
+				Fly_Ash_Con=(Cement_Content*Flyash_percentage);
+				
+				Fly_Ash_Con=round_off(Fly_Ash_Con);
+				
+				//System.out.println("Fly ash content is :  "+Fly_Ash_Con);
+				
+			}
+			if(GGBS==1)							// if GGBS present its quantity is found 
+			{
+				GGBS_Content=(Cement_Content*GGBS_percentage);
+				GGBS_Content=round_off(GGBS_Content);
+			//	System.out.println("GGBS content is  "+ GGBS_Content);
+				
+			}
+			if(Silica_Fumes==1)					// if silica fumes present its quantity is found 
+			{
+				Silicafumes_Content=(Cement_Content*silicafumes_percentage);
+				Silicafumes_Content=round_off(Silicafumes_Content);
+				
+			//System.out.println("Silica fumes content is :  "+Silicafumes_Content);
+			}
+			
+			
+			
+			
+			mass_chemical_Admixtures=(Cement_Content*Admixtures_percentage);
+			Cement_Content= Math.round(Cement_Content-(GGBS_Content + Silicafumes_Content + Fly_Ash_Con));
+			
+		}
+		
+		
+		
+		
+		
+		
+		
+		System.out.println("Cement content  is : "+Cement_Content);
+		
+		 System.out.println("wc ratio is : " + wc_ratio);
+		
+		
+		
+			/*  PROPORTION OF VOLUME OF CA & FA CONTENT   */
+		
+			// The Proportion of CA & FA is obtained for 0.5 wc-ratio 
+			// For Required wc-ratio 
+		
+		
+		if(wc_ratio!=0.5 && hson<=40)
+		{
+			if(wc_ratio<0.5)
+			{
+				double diff=0.5-wc_ratio;
+				PROPORTION_of_Ag=(double)PROPORTION_of_Ag+(double)(diff*0.01)/0.05;
+			}
+			else if(wc_ratio>0.5)
+			{
+				double diff=wc_ratio-0.5;
+				PROPORTION_of_Ag=PROPORTION_of_Ag-(diff*0.01)/0.05;	
+			}
+		}
+		
+		if(Pumpable_Concrete.equals("yes") && hson<=40)
+		{
+			PROPORTION_of_Ag*=0.9;
+		}
+		
+		System.out.println("");
+		
+		double Proportion_of_Volume_of_CA = PROPORTION_of_Ag;
+		double Proportion_of_Volume_of_FA = 1 - PROPORTION_of_Ag;
+		
+	//	System.out.println("Proportion of CA is :  "+ PROPORTION_of_Ag);
+		//System.out.println("Proportion of FA is :   "+Proportion_of_Volume_of_FA);
+		
+		
+		/*  MIX CALCULATIO */
+		
+		
+		System.out.println("####################################################################################################################################");
+		
+		System.out.println("The Target Mean Strength Is : "+f_ck+" N/mm2");
+		System.out.println("");
+		
+		
+		aircontent=aircontent*0.01;
+		System.out.println("Volumem of Entrapped air "+ aircontent+"m^3\n");
+		
+		
+		double c=(Cement_Content/(sg_c*1000));
+		double d=(water_content/(sg_w*1000));
+		
+		c=round_off(c);
+		d=round_off(d);
+		
+		System.out.println("Volume of Cement is "+c+"m^3\n");
+		System.out.println("Volume of Water Content is "+d+"m^3\n");
+		
+		
+		double Volume_of_flyash=0;
+		if(Fly_Ash==1)
+		{
+			Volume_of_flyash=(Fly_Ash_Con)/(1000*sg_flyash);
+			Volume_of_flyash=round_off(Volume_of_flyash);
+			System.out.println("Volume of Fly Ash is "+Volume_of_flyash+"m^3\n");	
+		}
+		
+		
+		
+		double Volume_of_GGBS=0;
+		if(GGBS==1)
+		{
+			Volume_of_GGBS=(GGBS_Content)/(1000*sg_GGBS);
+			Volume_of_GGBS=round_off(Volume_of_GGBS);
+			System.out.println("Volume of GGBS is "+Volume_of_GGBS+"m^3\n");
+		}
+		
+		
+		
+		double Volume_of_Silicafumes=0;
+		if(Silica_Fumes==1)
+		{
+			Volume_of_Silicafumes=(Silicafumes_Content)/(1000*sg_Silicafumes);
+			Volume_of_Silicafumes=round_off(Volume_of_Silicafumes);
+			
+			System.out.println("Volume of Silica Fumes is = "+Volume_of_Silicafumes+"m^3\n");
+		}
+		
+		
+		double h=(mass_chemical_Admixtures/(sg_Add*1000));
+		h=round_off(h);
+		System.out.println("Volume of Chemical Admixtures is = "+ h+"m^3\n");
+		
+		
+		double Volume_Of_All_Aggregates =(1-(aircontent +c+d+ Volume_of_flyash + Volume_of_GGBS + Volume_of_Silicafumes+h ));
+		Volume_Of_All_Aggregates=round_off(Volume_Of_All_Aggregates*10)/10;
+		
+		System.out.println("Volume of All Aggregates is    "+Volume_Of_All_Aggregates+"m^3\n");
+		
+		double Mass_of_CA =  Volume_Of_All_Aggregates * Proportion_of_Volume_of_CA * sg_CAgg *1000;
+		double Mass_of_FA =  Volume_Of_All_Aggregates * Proportion_of_Volume_of_FA * sg_FAgg *1000;
+		
+		
+		
+		System.out.println("Mass of CA is  "+Mass_of_CA+"Kg\n");
+		System.out.println("Mass of FA is  "+Mass_of_FA+"Kg\n");
+		
+		Mass_of_FA=Math.round(Mass_of_FA);
+		Mass_of_CA=Math.round(Mass_of_CA);
+		
+		
+		
+		
+		
+		System.out.println("####################################################################################################################################");
+		
+		int count=1;
+		System.out.println("\n\nMix Proportions for this trial:\n");
+		
+		System.out.println("            "+count+". CEMENT			=   "+(int)Cement_Content+"Kg/m3\n");
+		
+		count++;
+		
+		Fly_Ash_Con=round_off(Fly_Ash_Con);
+		GGBS_Content=round_off(GGBS_Content);
+		Silicafumes_Content=round_off(Silicafumes_Content);
+		
+		if(Fly_Ash==1)
+		{
+			System.out.println("            "+count+". FLY ASH			=   "+Fly_Ash_Con+"Kg/m3\n");
+			count++;
+		}
+		
+		if(GGBS==1)
+		{
+			System.out.println("            "+count+". GGBS				=   "+GGBS_Content+"Kg/m3\n");
+			count++;
+		}
+		
+		if(Silica_Fumes==1)
+		{
+			System.out.println("            "+count+". SILICA FUMES		=   "+Silicafumes_Content+"Kg/m3\n");
+			count++;
+		}
+		
+		
+		System.out.println("            "+count+". WATER			=   "+water_content+"Kg/m3\n");
+		count++;
+		
+		System.out.println("            "+count+". FINE AGGREGATES		=   "+Mass_of_FA+"Kg/m3\n");
+		count++;
+		
+		
+		System.out.println("            "+count+". COURSE AGGREGATES	=   "+Mass_of_CA+"Kg/m3\n");
+		count++;
+		
+		System.out.println("            "+count+". CHEMICAL ADMIXTURES	=   "+mass_chemical_Admixtures+"Kg/m3\n");
+		count++;
+		
+		
+		wc_ratio=round_off(wc_ratio);
+		System.out.println("            "+count+". WC-RATIO			=   "+wc_ratio+"\n");
+		count++;
+		
+		
+		
+		
+		
+		
+		
+		/*  MIX RATIO OF THE GIVEN CONCRETE  */
+		
+		int cement_ratio=1;
+		double FineAggregates_ratio=Mass_of_FA/Cement_Content;
+		FineAggregates_ratio=round_off2(FineAggregates_ratio);
+		
+		double CourseAggregates_ratio=Mass_of_CA/Cement_Content;
+		CourseAggregates_ratio=round_off2(CourseAggregates_ratio);
+		
+		double wc_ratio_ratio=round_off2(wc_ratio);
+		System.out.println("The MIX RATIO of the Given Concrete is : "+cement_ratio+":"+FineAggregates_ratio+":"+CourseAggregates_ratio+" (C:S:A)\n\n");
+
+		System.out.println("The MIX RATIO of the Given Concrete is : "+cement_ratio+":"+FineAggregates_ratio+":"+CourseAggregates_ratio+":"+wc_ratio_ratio+" (C:S:A:W)\n\n");
+		
+		
+		
+		System.out.println("####################################################################################################################################");
+		
+		
+		/*    CHECKING FOR WATER ABSORPTION    */
+
+		System.out.println("Enter 1 if Water Absorption is  present else Enter 0 ");
+		int Water_Absorption = sc.nextInt();
+		int Absorption_Condition=0;
+		double Moisture_CA=0;
+		double Moisture_FA=0;
+		
+		if(Water_Absorption==1)
+		{
+			System.out.println("Enter 1 for Wet Condition And 2 for Dry Condition :");
+			Absorption_Condition=sc.nextInt(); 
+		}
+		if(Absorption_Condition==1)
+		{
+			System.out.println("Enter Moisture percent of Coarse and Fine Aggregates");
+			System.out.println("Moisture Percent of Coarse Aggregate : ");
+			Moisture_CA=sc.nextDouble();
+			System.out.println("Moisture Percent of Fine Aggregate : ");
+			Moisture_FA=sc.nextDouble();
+			
+		}
+		else if(Absorption_Condition==2)
+		{
+			System.out.println("Enter Moisture percent of Coarse and Fine Aggregates");
+			System.out.println("Moisture Percent of Coarse Aggregate(%) : ");
+			Moisture_CA=sc.nextDouble();
+			System.out.println("Moisture Percent of Fine Aggregate(%) : ");
+			Moisture_FA=sc.nextDouble();
+		}
+		
+		
+		int ca_m=0;
+		int fa_m=0;
+		
+		
+		
+		if(Absorption_Condition==1)
+		{
+			double Free_Moisture_CA=(2-Moisture_CA);
+			double Free_Moisture_FA=(5-Moisture_FA);
+			ca_m=(int)Math.round((1+Free_Moisture_CA*0.01)*Mass_of_CA-Mass_of_CA);
+			fa_m=(int)Math.round((1+Free_Moisture_FA*0.01)*Mass_of_FA-Mass_of_FA);
+			System.out.println("Coarse Aggregates after Adjustment : "+ca_m);
+			System.out.println("Fine Aggregates after Adjustment : "+fa_m);
+			
+			water_content=water_content - ca_m - fa_m;
+		}
+		if(Absorption_Condition==2)
+		{
+			ca_m=(int)(Mass_of_CA-Math.round(Mass_of_CA/(1+(Moisture_CA*0.01))));
+			fa_m=(int)(Mass_of_FA-Math.round(Mass_of_FA/(1+(Moisture_FA*0.01))));
+			System.out.println("Coarse Aggregates after Adjustment : "+ca_m+"Kg");
+			System.out.println("Fine Aggregates after Adjustment : "+fa_m+"Kg");
+			
+			water_content=water_content + ca_m + fa_m;
+		}
+
+		System.out.println("####################################################################################################################################");
+		
+		
+		// PRINTING AFTER ADJUSTMENTS 
+		
+		count=1;
+		System.out.println("\n\nADJUSTMENTS ON WATER, FINE AGGREGATES, COURSE AGGREGATES \n");
+		
+		System.out.println("            "+count+". CEMENT			=   "+(int)Cement_Content+"Kg/m3\n");
+		
+		count++;
+		
+
+		if(Fly_Ash==1)
+		{
+			System.out.println("            "+count+". FLY ASH			=   "+Fly_Ash_Con+"Kg/m3\n");
+			count++;
+		}
+		
+		if(GGBS==1)
+		{
+			System.out.println("            "+count+". GGBS			=   "+GGBS_Content+"Kg/m3\n");
+			count++;
+		}
+		
+		
+		if(Silica_Fumes==1)
+		{
+			System.out.println("            "+count+". SILICA FUMES		=   "+Silicafumes_Content+"Kg/m3\n");
+			count++;
+		}
+		
+		
+		System.out.println("            "+count+". WATER			=   "+water_content+"Kg/m3\n");
+		count++;
+		
+		System.out.println("            "+count+". FINE AGGREGATES		=   "+Mass_of_FA+"Kg/m3\n");
+		count++;
+		
+		
+		System.out.println("            "+count+". COURSE AGGREGATES	=   "+Mass_of_CA+"Kg/m3\n");
+		count++;
+		
+		System.out.println("            "+count+". CHEMICAL ADMIXTURES	=   "+mass_chemical_Admixtures+"Kg/m3\n");
+		count++;
+		
+		
+		wc_ratio_ratio=round_off(wc_ratio);
+		System.out.println("            "+count+". WC-RATIO			=   "+wc_ratio+"\n");
+		count++;
+		
+		
+		FineAggregates_ratio=Mass_of_FA/Cement_Content;
+		FineAggregates_ratio=round_off2(FineAggregates_ratio);
+		
+		CourseAggregates_ratio=Mass_of_CA/Cement_Content;
+		CourseAggregates_ratio=round_off2(CourseAggregates_ratio);
+		
+		wc_ratio=round_off2(wc_ratio);
+		System.out.println("The MIX RATIO of the Given Concrete is : "+cement_ratio+":"+FineAggregates_ratio+":"+CourseAggregates_ratio+" (C:S:A)\n\n");
+
+		System.out.println("The MIX RATIO of the Given Concrete is : "+cement_ratio+":"+FineAggregates_ratio+":"+CourseAggregates_ratio+":"+wc_ratio_ratio+" (C:S:A:W)\n\n");
+		
+		System.out.println("####################################################################################################################################");
+		
+		
+	}
+    
+}
