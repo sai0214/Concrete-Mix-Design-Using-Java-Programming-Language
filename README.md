@@ -1,0 +1,3 @@
+# Concrete-Mix-Design-Using-Java-Programming-Language
+
+Concrete mix design is the process of selecting the proper components and figuring out the proper ratios to achieve the desired workability, strength, and durability. As a result, an attempt has been made to create a Java program for concrete mix design by IS 10262:2019 and IS 456:2000. Computer software is created in this way to proportion input variables to a set of output variables, which avoids time-consuming computations in real time. The produced program was carefully checked. The results were compared to make sure they were accurate after being put through a series of manually check issues. The concrete mix design produced by the Java program was exact, time-saving, and computationally efficient.
